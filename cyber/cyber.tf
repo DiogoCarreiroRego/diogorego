@@ -206,6 +206,16 @@ resource "aws_vpc_security_group_ingress_rule" "cyber_enta" {
   }
 }
 
+resource "aws_vpc_security_group_ingress_rule" "cyber_home" {
+  cidr_ipv4              = "78.29.148.171/32"
+  description            = "HOME"
+  ip_protocol            = "-1"
+  security_group_id      = aws_security_group.cyber_default.id
+  tags                   = {
+    "Name" = "My IP address"
+  }
+}
+
 resource "aws_instance" "luxsrv_cyber_local" {
   ami                                  = var.deb_based
   instance_type                        = "t2.small"
@@ -221,14 +231,6 @@ resource "aws_instance" "luxsrv_cyber_local" {
   network_interface {
     device_index         = 2
     network_interface_id = aws_network_interface.luxsrv_cyber_private2.id
-  }
-  network_interface {
-    device_index         = 3
-    network_interface_id = aws_network_interface.luxsrv_cyber_private3.id
-  }
-  network_interface {
-    device_index         = 4
-    network_interface_id = aws_network_interface.luxsrv_cyber_private4.id
   }
   tags                                 = {
     "Name" = "luxsrv.cyber.local"
@@ -265,30 +267,6 @@ resource "aws_network_interface" "luxsrv_cyber_private2" {
   subnet_id          = aws_subnet.cyber_private2.id
   tags                                 = {
     "Name" = "Cyber private2 interface"
-  }
-}
-
-resource "aws_network_interface" "luxsrv_cyber_private3" {
-  private_ips         = ["10.0.3.10"]
-  security_groups    = [
-    aws_security_group.cyber_default.id,
-  ]
-  source_dest_check  = false
-  subnet_id          = aws_subnet.cyber_private3.id
-  tags                                 = {
-    "Name" = "Cyber private3 interface"
-  }
-}
-
-resource "aws_network_interface" "luxsrv_cyber_private4" {
-  private_ips         = ["10.0.4.10"]
-  security_groups    = [
-    aws_security_group.cyber_default.id,
-  ]
-  source_dest_check  = false
-  subnet_id          = aws_subnet.cyber_private4.id
-  tags                                 = {
-    "Name" = "Cyber private4 interface"
   }
 }
 
