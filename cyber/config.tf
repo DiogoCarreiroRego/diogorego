@@ -1,51 +1,27 @@
-data "template_file" "luxsrv-pdl-local" {
+data "template_file" "luxsrv-cyber-local" {
   template = <<EOF
 #!/bin/bash
-hostnamectl set-hostname luxsrv.pdl.local
+LOGFILE="/var/log/cloud-config-"$(date +%s)
+SCRIPT_LOG_DETAIL="$LOGFILE"_$(basename "$0").log
+
+# Reference: https://serverfault.com/questions/103501/how-can-i-fully-log-all-bash-scripts-actions
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>$SCRIPT_LOG_DETAIL 2>&1
+
+hostnamectl set-hostname luxsrv-cyber-local
 apt-get update
 apt-get upgrade
-EOF
-}
-
-data "template_file" "deb-pdl-local" {
-  template = <<EOF
-#!/bin/bash
-hostnamectl set-hostname deb.pdl.local
-apt-get update
-apt-get upgrade
-EOF
-}
-
-data "template_file" "rh-pdl-local" {
-  template = <<EOF
-#!/bin/bash
-hostnamectl set-hostname rh.pdl.local
-yum -y update
-EOF
-}
-
-data "template_file" "debcli-pdl-local" {
-  template = <<EOF
-#!/bin/bash
-hostnamectl set-hostname debcli.pdl.local
-apt-get update
-apt-get upgrade
-EOF
-}
-
-data "template_file" "rhcli-pdl-local" {
-  template = <<EOF
-#!/bin/bash
-hostnamectl set-hostname luxsrv.pdl.local
-yum -y update
-EOF
-}
-
-data "template_file" "luxsql-portimao-pt" {
-  template = <<EOF
-#!/bin/bash
-hostnamectl set-hostname luxsrv.pdl.local
-apt-get update
-apt-get upgrade
+apt install -y xfce4 xfce4-goodies
+apt install -y xrdp filezilla
+apt install -y mysql-workbench-community
+snap connect mysql-workbench-community:password-manager-service :password-manager-service
+snap install brave
+snap install thunderbird
+adduser xrdp ssl-cert
+echo -e "ubuntu\nPassw0rd" | passwd ubuntu
+echo xfce4-session > /home/ubuntu/.xsession
+chown ubuntu:ubuntu /home/ubuntu/.xsession
+systemctl enable --now xrdp
 EOF
 }
