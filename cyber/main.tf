@@ -1,91 +1,98 @@
-resource "aws_key_pair" "redes" {
+resource "aws_key_pair" "key" {
   key_name   = "Redes"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC2W6MG+b8k9HKNMRyQksi+S2XBryBNK9uj4DkXu542Hf4hd32zCFnlNbik3EDOE8EKeg8S6IvJGdTeBLYraxize2tm5DMGz6LMeWmyK+OK/EDxYtRpJMXC7Dk3rbRdsRZyvqqmQmP5hJEV5A0zLUYwgm6cIxGa1a+671AG2cX170qbmdb3OzajlccaEIq0QexBoBM2kDpu3kG4aeLKShbp9Pjj290tRFvVMEqwi8Ay8KdQY8Sg1f8QTdJe9F5icACm4SLkfTiSw0sB7nDInNj3R4/Q7yn4Hx65K5uG8jXUGTsHdWcFgrm/naWJ3yfxoNOQayZlX44lL4rsiy7w/HPZR2MBFcYAJxfDG0Pam6fXnQr7MHZ/XK0QaP2vvPbmlifPaJQMEAfOvZxhRS7CLmFawbqokxsO+62ADB/38ycxD0Hq2Q1LF9+f4f17Tq8JRssYFkdzM63l0tnQhbyZM6g+J3VMgovSHu3jBHLZ9wIhilndQvQNtecIqVGzGposdBp0c/USF4km12xk/RXsQnWnbp+8fNcdiSF3dkF0p+dIdfHIuTH5GnmzP9187K3FZu0gueQJuU5Lx0IP+6TEZgSrDJgElx6PJCPzIv6/2OL3QdmhzwcFN3L/xq0GF4GMGxeGGouVQjRKo+Q3u3PLezVoAgAlnAd3qAikP82VA2358w=="
 }
 
-resource "aws_vpc" "PontaDelgada" {
+resource "aws_vpc" "cyber" {
   cidr_block                           = "10.0.0.0/16"
   tags                                 = {
     "Name" = "PontaDelgada"
   }
 }
 
-resource "aws_subnet" "pdl_private1" {
+resource "aws_subnet" "cyber_private1" {
   availability_zone                              = var.avail_zone
   cidr_block                                     = "10.0.1.0/24"
   tags                                           = {
-    "Name" = "PontaDelgada-subnet-pdl_private1"
+    "Name" = "cyber-subnet-pdl_private1"
   }
-  vpc_id                                         = aws_vpc.PontaDelgada.id
+  vpc_id                                         = aws_vpc.cyber.id
 }
 
-resource "aws_subnet" "pdl_private2" {
+resource "aws_subnet" "cyber_private2" {
   availability_zone                              = var.avail_zone
   cidr_block                                     = "10.0.2.0/24"
   tags                                           = {
-    "Name" = "PontaDelgada-subnet-pdl_private2"
+    "Name" = "cyber-subnet-pdl_private2"
   }
-  vpc_id                                         = aws_vpc.PontaDelgada.id
+  vpc_id                                         = aws_vpc.cyber.id
 }
 
-resource "aws_subnet" "pdl_public1" {
+resource "aws_subnet" "cyber_public1" {
   availability_zone                              = var.avail_zone
   cidr_block                                     = "10.0.0.0/24"
   tags                                           = {
-    "Name" = "PontaDelgada-subnet-pdl_public1"
+    "Name" = "cyber-subnet-pdl_public1"
   }
-  vpc_id                                         = aws_vpc.PontaDelgada.id
+  vpc_id                                         = aws_vpc.cyber.id
 }
 
-resource "aws_internet_gateway" "PontaDelgada-igw" {
+resource "aws_internet_gateway" "cyber-igw" {
   tags     = {
-    "Name" = "PontaDelgada-igw"
+    "Name" = "cyber-igw"
   }
-  vpc_id   = aws_vpc.PontaDelgada.id
+  vpc_id   = aws_vpc.cyber.id
 }
 
-resource "aws_route_table" "pdl_private1" {
+resource "aws_route_table" "cyber_private1" {
   tags             = {
-    "Name" = "PontaDelgada-rtb-pdl_private1"
+    "Name" = "cyber-rtb-pdl_private1"
   }
-  vpc_id           = aws_vpc.PontaDelgada.id
+  vpc_id           = aws_vpc.cyber.id
 }
 
-resource "aws_route_table" "pdl_private2" {
+resource "aws_route_table" "cyber_private2" {
   tags             = {
-    "Name" = "PontaDelgada-rtb-pdl_private2"
+    "Name" = "cyber-rtb-pdl_private2"
   }
-  vpc_id           = aws_vpc.PontaDelgada.id
+  vpc_id           = aws_vpc.cyber.id
 }
 
-resource "aws_route_table" "pdl_public1" {
-  vpc_id = aws_vpc.PontaDelgada.id
+resource "aws_route_table" "cyber_private3" {
+  tags             = {
+    "Name" = "cyber-rtb-pdl_private3"
+  }
+  vpc_id           = aws_vpc.cyber.id
+}
+
+resource "aws_route_table" "cyber_public1" {
+  vpc_id = aws_vpc.cyber.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.PontaDelgada-igw.id
+    gateway_id = aws_internet_gateway.cyber-igw.id
   }
   tags             = {
-    "Name" = "PontaDelgada-rtb-public"
+    "Name" = "cyber-rtb-public"
   }
 }
 
-resource "aws_route_table_association" "pdl_private1" {
-  route_table_id = aws_route_table.pdl_private1.id
-  subnet_id      = aws_subnet.pdl_private1.id
+resource "aws_route_table_association" "cyber_private1" {
+  route_table_id = aws_route_table.cyber_private1.id
+  subnet_id      = aws_subnet.cyber_private1.id
 }
 
-resource "aws_route_table_association" "pdl_private2" {
-  route_table_id = aws_route_table.pdl_private2.id
-  subnet_id      = aws_subnet.pdl_private2.id
+resource "aws_route_table_association" "cyber_private2" {
+  route_table_id = aws_route_table.cyber_private2.id
+  subnet_id      = aws_subnet.cyber_private2.id
 }
 
-resource "aws_route_table_association" "pdl_public1" {
-  route_table_id = aws_route_table.pdl_public1.id
-  subnet_id      = aws_subnet.pdl_public1.id
+resource "aws_route_table_association" "cyber_public1" {
+  route_table_id = aws_route_table.cyber_public1.id
+  subnet_id      = aws_subnet.cyber_public1.id
 }
 
-resource "aws_vpc_endpoint" "PontaDelgada-vpce-s3" {
+resource "aws_vpc_endpoint" "cyber-vpce-s3" {
   policy                = jsonencode(
     {
       Statement = [
@@ -100,19 +107,20 @@ resource "aws_vpc_endpoint" "PontaDelgada-vpce-s3" {
     }
   )
   route_table_ids       = [
-    aws_route_table.pdl_private1.id,
-    aws_route_table.pdl_private2.id,
+    aws_route_table.cyber_private1.id,
+    aws_route_table.cyber_private2.id,
+    aws_route_table.cyber_private3.id,
   ]
   service_name          = var.vpc_ep_svc_name
   tags                  = {
-    "Name" = "PontaDelgada-vpce-s3"
+    "Name" = "cyber-vpce-s3"
   }
   vpc_endpoint_type     = "Gateway"
-  vpc_id                = aws_vpc.PontaDelgada.id
+  vpc_id                = aws_vpc.cyber.id
 }
 
-resource "aws_security_group" "pdl_default" {
-  description = "PontaDelgada default VPC security group"
+resource "aws_security_group" "cyber_default" {
+  description = "Cyber default VPC security group"
   egress      = [
     {
       cidr_blocks      = [
@@ -145,28 +153,18 @@ resource "aws_security_group" "pdl_default" {
       to_port          = 0
     },
   ]
-  name        = "pdl_default"
+  name        = "cyber_default"
   tags        = {
-    "Name" = "PontaDelgada"
+    "Name" = "Cyber"
   }
-  vpc_id      = aws_vpc.PontaDelgada.id
+  vpc_id      = aws_vpc.cyber.id
 }
 
-resource "aws_vpc_security_group_ingress_rule" "pdl_home" {
-  cidr_ipv4              = "128.65.243.205/32"
-  description            = "Home"
-  ip_protocol            = "-1"
-  security_group_id      = aws_security_group.pdl_default.id
-  tags                   = {
-    "Name" = "Home IP address"
-  }
-}
-
-resource "aws_vpc_security_group_ingress_rule" "pdl_enta" {
+resource "aws_vpc_security_group_ingress_rule" "cyber_enta" {
   cidr_ipv4              = "185.218.12.73/32"
   description            = "ENTA"
   ip_protocol            = "-1"
-  security_group_id      = aws_security_group.pdl_default.id
+  security_group_id      = aws_security_group.cyber_default.id
   tags                   = {
     "Name" = "ENTA IP address"
   }
@@ -175,7 +173,7 @@ resource "aws_vpc_security_group_ingress_rule" "pdl_enta" {
 resource "aws_instance" "luxsrv_pdl_local" {
   ami                                  = var.deb_based
   instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.redes.key_name
+  key_name                             = aws_key_pair.key.key_name
   network_interface {
     device_index         = 0
     network_interface_id = aws_network_interface.luxsrv_pdl_public1.id
@@ -205,10 +203,10 @@ resource "aws_instance" "luxsrv_pdl_local" {
 resource "aws_network_interface" "luxsrv_pdl_private1" {
   private_ips         = ["10.0.1.10"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_private1.id
+  subnet_id          = aws_subnet.cyber_private1.id
   tags                                 = {
     "Name" = "PontaDelgada private1 interface"
   }
@@ -217,10 +215,10 @@ resource "aws_network_interface" "luxsrv_pdl_private1" {
 resource "aws_network_interface" "luxsrv_pdl_private2" {
   private_ips         = ["10.0.2.10"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_private2.id
+  subnet_id          = aws_subnet.cyber_private2.id
   tags                                 = {
     "Name" = "PontaDelgada private2 interface"
   }
@@ -229,10 +227,10 @@ resource "aws_network_interface" "luxsrv_pdl_private2" {
 resource "aws_network_interface" "luxsrv_pdl_public1" {
   private_ips         = ["10.0.0.10"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_public1.id
+  subnet_id          = aws_subnet.cyber_public1.id
   tags                                 = {
     "Name" = "PontaDelgada public interface"
   }
@@ -252,7 +250,7 @@ resource "aws_eip" "pdl_public_ip" {
 resource "aws_instance" "deb_pdl_local" {
   ami                                  = var.deb_based
   instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.redes.key_name
+  key_name                             = aws_key_pair.key.key_name
   network_interface {
     device_index         = 0
     network_interface_id = aws_network_interface.deb_pdl_private2.id
@@ -274,10 +272,10 @@ resource "aws_instance" "deb_pdl_local" {
 resource "aws_network_interface" "deb_pdl_private2" {
   private_ips         = ["10.0.2.101"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_private2.id
+  subnet_id          = aws_subnet.cyber_private2.id
   tags                                 = {
     "Name" = "PontaDelgada deb_pdl private interface"
   }
@@ -286,7 +284,7 @@ resource "aws_network_interface" "deb_pdl_private2" {
 resource "aws_instance" "rh_pdl_local" {
   ami                                  = var.rh_based
   instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.redes.key_name
+  key_name                             = aws_key_pair.key.key_name
   network_interface {
     device_index         = 0
     network_interface_id = aws_network_interface.rh_pdl_private2.id
@@ -308,10 +306,10 @@ resource "aws_instance" "rh_pdl_local" {
 resource "aws_network_interface" "rh_pdl_private2" {
   private_ips         = ["10.0.2.102"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_private2.id
+  subnet_id          = aws_subnet.cyber_private2.id
   tags                                 = {
     "Name" = "PontaDelgada rh_pdl private interface"
   }
@@ -320,7 +318,7 @@ resource "aws_network_interface" "rh_pdl_private2" {
 resource "aws_instance" "debcli_pdl_local" {
   ami                                  = var.deb_based
   instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.redes.key_name
+  key_name                             = aws_key_pair.key.key_name
   network_interface {
     device_index         = 0
     network_interface_id = aws_network_interface.debcli_pdl_private1.id
@@ -342,10 +340,10 @@ resource "aws_instance" "debcli_pdl_local" {
 resource "aws_network_interface" "debcli_pdl_private1" {
   private_ips         = ["10.0.1.101"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_private1.id
+  subnet_id          = aws_subnet.cyber_private1.id
   tags                                 = {
     "Name" = "PontaDelgada maria private interface"
   }
@@ -354,7 +352,7 @@ resource "aws_network_interface" "debcli_pdl_private1" {
 resource "aws_instance" "rhcli_pdl_local" {
   ami                                  = var.rh_based
   instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.redes.key_name
+  key_name                             = aws_key_pair.key.key_name
   network_interface {
     device_index         = 0
     network_interface_id = aws_network_interface.rhcli_pdl_private2.id
@@ -376,10 +374,10 @@ resource "aws_instance" "rhcli_pdl_local" {
 resource "aws_network_interface" "rhcli_pdl_private2" {
   private_ips         = ["10.0.1.102"]
   security_groups    = [
-    aws_security_group.pdl_default.id,
+    aws_security_group.cyber_default.id,
   ]
   source_dest_check  = false
-  subnet_id          = aws_subnet.pdl_private1.id
+  subnet_id          = aws_subnet.cyber_private1.id
   tags                                 = {
     "Name" = "PontaDelgada rhcli private interface"
   }
