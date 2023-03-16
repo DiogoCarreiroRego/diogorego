@@ -15,6 +15,5 @@ output "caller_user" {
 }
 
 output "luxsrv_cyber_local_public_ip" {
-  description = "Public IP address of the luxsrv_cyber_local"
   value = aws_eip.cyber_public_ip.public_ip
 }

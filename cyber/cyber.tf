@@ -206,6 +206,16 @@ resource "aws_vpc_security_group_ingress_rule" "cyber_enta" {
   }
 }
 
+resource "aws_vpc_security_group_ingress_rule" "cyber_enta_meo" {
+  cidr_ipv4              = "83.240.158.54/32"
+  description            = "ENTA MEO"
+  ip_protocol            = "-1"
+  security_group_id      = aws_security_group.cyber_default.id
+  tags                   = {
+    "Name" = "ENTA MEO IP address"
+  }
+}
+
 resource "aws_vpc_security_group_ingress_rule" "cyber_home" {
   cidr_ipv4              = "78.29.148.171/32"
   description            = "HOME"
@@ -218,7 +228,7 @@ resource "aws_vpc_security_group_ingress_rule" "cyber_home" {
 
 resource "aws_instance" "luxsrv_cyber_local" {
   ami                                  = var.deb_based
-  instance_type                        = "t2.small"
+  instance_type                        = "c5a.large"
   key_name                             = aws_key_pair.key.key_name
   network_interface {
     device_index         = 0
