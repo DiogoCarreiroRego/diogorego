@@ -302,3 +302,4 @@ resource "aws_eip" "cyber_public_ip" {
     aws_instance.luxsrv_cyber_local
   ]
 }
+

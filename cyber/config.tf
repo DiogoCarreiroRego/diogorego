@@ -26,7 +26,7 @@ systemctl enable --now xrdp
 EOF
 }
 
-data "template_file" "rhsrv-cyber-local" {
+data "template_file" "onionsrv-cyber-local" {
   template = <<EOF
 #!/bin/bash
 LOGFILE="/var/log/cloud-config-"$(date +%s)
@@ -37,7 +37,8 @@ exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>$SCRIPT_LOG_DETAIL 2>&1
 
-hostnamectl set-hostname rhsrv-cyber-local
-yum update -y
+hostnamectl set-hostname onionsrv.cyber.local
+apt update
+apt upgrade -y
 EOF
 }
