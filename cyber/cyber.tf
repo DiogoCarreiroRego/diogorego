@@ -243,17 +243,17 @@ resource "aws_instance" "luxsrv_cyber_local" {
     network_interface_id = aws_network_interface.luxsrv_cyber_private2.id
   }
   tags                                 = {
-    "Name" = "luxsrv.cyber.local"
+    "Name" = "luxsrv"
   }
   root_block_device {
     delete_on_termination = true
     tags                                 = {
-      "Name" = "Volume for luxsrv.cyber.local"
+      "Name" = "Volume for luxsrv"
     }
     volume_size           = 30
     volume_type           = "gp3"
   }
-  user_data = data.template_file.luxsrv-cyber-local.rendered
+  user_data = data.template_file.luxsrv.rendered
 }
 
 resource "aws_network_interface" "luxsrv_cyber_private1" {
