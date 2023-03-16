@@ -13,3 +13,8 @@ output "caller_arn" {
 output "caller_user" {
   value = data.aws_caller_identity.current.user_id
 }
+
+output "luxsrv_cyber_local_public_ip" {
+  description = "Public IP address of the luxsrv_cyber_local"
+  value = aws_eip.cyber_public_ip.public_ip
+}
